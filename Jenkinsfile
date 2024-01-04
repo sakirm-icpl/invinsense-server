@@ -9,6 +9,9 @@ pipeline {
         stage('Install .NET SDK') {
             steps {
                 script {
+                    // Configure sudo to not prompt for a password for apt-get update
+                    sh 'echo "jenkins ALL=(ALL) NOPASSWD: /usr/bin/apt-get update" | sudo tee -a /etc/sudoers.d/jenkins-update'
+
                     // Install .NET SDK
                     sh "sudo apt-get update"
                     sh "sudo apt-get install -y dotnet-sdk-${DOTNET_VERSION}"
