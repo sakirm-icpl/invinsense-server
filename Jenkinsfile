@@ -10,8 +10,11 @@ pipeline {
         stage('Install Docker and Build') {
             steps {
                 script {
-                    // Install Docker
-                    sh 'sudo apt-get update && sudo apt-get install -y docker.io'
+                    // Update package index without sudo
+                    sh 'apt-get update'
+
+                    // Install Docker without sudo
+                    sh 'apt-get install -y docker.io'
 
                     // Build inside a Docker container
                     sh "docker run --rm -v ${PWD}:/app -w /app ${DOCKER_IMAGE} dotnet build"
