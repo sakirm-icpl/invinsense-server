@@ -47,6 +47,7 @@ pipeline {
     post {
         always {
             // Clean up or perform other tasks as needed
+            echo "Always block executed"
         }
     }
 }
