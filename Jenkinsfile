@@ -1,34 +1,25 @@
 pipeline {
-    agent {
-        docker {
-            image 'mcr.microsoft.com/dotnet/sdk:3.1'  // Use the desired .NET SDK version
-        }
+    agent any
+
+    environment {
+        DOTNET_VERSION = "3.1"  // Adjust the version as needed
+        DOCKER_IMAGE = 'mcr.microsoft.com/dotnet/sdk:' + DOTNET_VERSION
     }
 
     stages {
-        stage('Checkout') {
-            steps {
-                checkout scm
-            }
-        }
-
-        stage('Restore Dependencies') {
+        stage('Install Docker and Build') {
             steps {
                 script {
-                    sh 'dotnet restore'
+                    // Install Docker
+                    sh 'sudo apt-get update && sudo apt-get install -y docker.io'
+
+                    // Build inside a Docker container
+                    sh "docker run --rm -v ${PWD}:/app -w /app ${DOCKER_IMAGE} dotnet build"
                 }
             }
         }
 
-        stage('Build') {
-            steps {
-                script {
-                    sh 'dotnet build'
-                }
-            }
-        }
-
-        // Add additional stages as needed
+        // Add additional stages for testing, publishing, etc. as needed
     }
 
     post {
