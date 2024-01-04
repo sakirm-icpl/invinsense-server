@@ -3,7 +3,7 @@ pipeline {
 
     environment {
         DOTNET_VERSION = "3.1"  // Adjust the version as needed
-        DOCKER_IMAGE = 'mcr.microsoft.com/dotnet/sdk:' + DOTNET_VERSION
+        DOCKER_IMAGE = "mcr.microsoft.com/dotnet/sdk:${DOTNET_VERSION}"
     }
 
     stages {
