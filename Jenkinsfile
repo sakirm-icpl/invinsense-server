@@ -1,34 +1,34 @@
 pipeline {
     agent any
 
-    environment {
-        DOTNET_VERSION = "3.1"  // Adjust the version as needed
-        DOCKER_IMAGE = "mcr.microsoft.com/dotnet/sdk:${DOTNET_VERSION}"
-    }
-
     stages {
-        stage('Install Docker and Build') {
+        stage('Checkout SCM') {
             steps {
-                script {
-                    // Update package index without sudo
-                    sh 'sudo apt-get update'
-
-                    // Install Docker without sudo
-                    sh 'sudo apt-get install -y docker.io'
-
-                    // Build inside a Docker container
-                    sh "sudo docker run --rm -v ${PWD}:/app -w /app ${DOCKER_IMAGE} dotnet build"
-                }
+                checkout scm
             }
         }
 
-        // Add additional stages for testing, publishing, etc. as needed
+        stage('Install Docker and Build') {
+            steps {
+                script {
+                    // Configure sudo to not require a password for the Jenkins user
+                    sh 'echo "jenkins ALL=(ALL) NOPASSWD: ALL" | sudo tee -a /etc/sudoers.d/jenkins'
+                    
+                    // Install Docker and other necessary tools
+                    sh 'sudo apt-get update'
+                    // Add more installation steps as needed
+
+                    // Run Docker commands without sudo
+                    sh 'docker build -t your-docker-image .'
+                    // Add more Docker commands as needed
+                }
+            }
+        }
     }
 
     post {
         always {
-            // Clean up or perform other tasks as needed
-            echo "Always block executed"
+            echo 'Always block executed'
         }
     }
 }
