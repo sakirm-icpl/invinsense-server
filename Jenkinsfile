@@ -11,13 +11,13 @@ pipeline {
             steps {
                 script {
                     // Update package index without sudo
-                    sh 'apt-get update'
+                    sh 'sudo apt-get update'
 
                     // Install Docker without sudo
-                    sh 'apt-get install -y docker.io'
+                    sh 'sudo apt-get install -y docker.io'
 
                     // Build inside a Docker container
-                    sh "docker run --rm -v ${PWD}:/app -w /app ${DOCKER_IMAGE} dotnet build"
+                    sh "sudo docker run --rm -v ${PWD}:/app -w /app ${DOCKER_IMAGE} dotnet build"
                 }
             }
         }
